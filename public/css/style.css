@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+*, :before, :after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-border-opacity: 1;
+    --tw-border-opacity: 1;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgba(59,130,246,.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+}
+
+
+html, body {
+    margin: 0;
+	padding: 0;
+	border: 0;
+    font-family: BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
+    /* align-items: center; */
+}
+
+a {
+    text-decoration: none;
+}
+
+
+h1 {
+    font-family: Paytone One,sans-serif;
+}
+
+/* Navbar */
+
+header {
+    background-color: rgb(59 221 143);
+    display: grid;
+    grid-template-columns: 4fr 2fr;
+    color: white;
+    padding: 2rem;
+}
+
+.logo {
+    font-family: Paytone One,sans-serif; 
+    width: 10rem;
+}
+
+nav {
+    display: grid;
+    grid-template-columns: repeat( auto-fit, minmax(8.75rem, 1fr) );
+    /* grid-template-columns: repeat(4, 1fr); */
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    max-width: 50rem;
+}
+
+.green-btn {
+    background-color: rgb(0 60 60/1);
+    color: white;
+    font-size: 1.125rem;
+    border-radius: 100rem;
+    border: 0;
+    padding: 0.5rem;
+}
+
+
+.grid-item {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+
+
+/* Banner Section */
+.banner-section {
+    background-color: rgb(59 221 143);
+    height:35rem;
+}
+
+.banner-heading {
+    font-size: 5.3rem;
+    margin-top: 0;
+    padding-top: 3rem;
+}
+
+
+
+
+/* Citizen Reporting */
+
+.citizen-report-form {
+    padding: 2.5rem;
+    --tw-bg-opacity: 1;
+    --tw-shadow: -4px 4px 20px 0px rgba(128,159,176,.2);
+    --tw-shadow-colored: -4px 4px 20px 0px var(--tw-shadow-color);
+    background-color: rgb(255 255 255/var(--tw-bg-opacity));
+    border-radius: 1rem;
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
+    margin-inline: 15rem;
+    margin-block: 5rem;
+    min-height: 20rem;
+}
+
+.citizen-report-form input:not([type=checkbox]):not([type=radio]), .citizen-report-form select {
+    border-radius: 9999px;
+}
+
+.citizen-report-form input:not([type=checkbox]):not([type=radio]), .citizen-report-form select, .citizen-report-form textarea {
+    --tw-border-opacity: 1;
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+    background-color: rgb(255 255 255/var(--tw-bg-opacity));
+    border-color: rgb(204 226 225/var(--tw-border-opacity));
+    border-style: solid;
+    border-width: 2px;
+    color: rgb(0 60 60/var(--tw-text-opacity));
+    font-size: 1rem;
+    line-height: 1.5rem;
+    margin-bottom: 1.25rem;
+    margin-top: 0.625rem;
+    outline-width: 0;
+    padding: 0.75rem 1rem;
+    transition-duration: .15s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    width: 100%;
+}
+
+.citizen-report-form textarea {
+    border-radius: 1rem;
+    height: 10rem;
+}
+
+
+div.control {
+    display: grid;
+    align-items: center;
+    grid-template-columns: 1fr 30fr;
+}
+
+.citizen-report-form div.control input {
+    box-shadow: inset 0 0 0 20px #fff;
+    border-width: 3px;
+    height: 26px;
+    width: 26px;
+    appearance: none;
+    background-color: rgb(59 221 143/1);
+    border-color: rgb(59 221 143);
+    border-radius: 3px;
+    border-style: solid;
+    cursor: pointer;
+}
+
+.citizen-report-form div.control input:checked {
+    box-shadow: inset 0 0 0 3px #fff;
+}
+
+.btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+button.green-btn {
+    padding: 1rem;
+}
