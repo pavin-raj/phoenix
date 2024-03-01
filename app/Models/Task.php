@@ -9,14 +9,14 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['description', 'user_id', 'state', 'priority', 'latitude', 'longitude'];
+    protected $fillable = ['description', 'user_id', 'status', 'priority', 'latitude', 'longitude', 'city', 'state'];
 
     
     public function user(){
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function task(){
-        $this->hasOne(Task::class);
+    public function task_contact(){
+        return $this->hasOne(TaskContact::class);
     }
 }

@@ -27,6 +27,8 @@ class UserController extends Controller
                 ->uncompromised()]
         ]);
 
+        // Checks if user type is provided by user, else made a citizen
+        $formFields['role_id'] = $request->filled('user_type') ? $request->user_type : 5;
         // Encrypt Password
         $formFields['password'] = bcrypt($formFields['password']);
 
@@ -70,4 +72,7 @@ class UserController extends Controller
 
         return redirect('/')->with('message', 'Logged out successfully');
     }
+
+
+    
 }

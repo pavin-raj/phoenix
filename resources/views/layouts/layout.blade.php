@@ -10,6 +10,9 @@
     <meta name="csrf_token" content="{{ csrf_token() }}">
 
     <title>Phoenix</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ URL::asset('css/style.css') }} ">
 </head>
 
@@ -28,28 +31,32 @@
                         vector-effect="non-scaling-stroke" />
                 </g>
             </svg></a>
-        <nav>
+        <nav class="grid">
             @auth
-                <span class="grid-item">Welcome, {{ auth()->user()->name }}</span>
-                <form action="{{ route('logout') }}" method="post">
+
+                {{-- For all users except citizen --}}
+                @unless (auth()->user()->role_id == 5)
+                    <a href="/users" class="grid-item">Add Users</a>
+                    <a href="/tasks/index" class="grid-item">Tasks</a>
+                @endunless
+
+                @can('isCitizen')
+                    <a href="/tasks/index" class="grid-item">Open Requests</a>
+                @endcan
+
+
+                <form action="{{ route('logout') }}" method="post" class="grid-item">
                     @csrf
                     @method('post')
-                    <button type="submit" class="green-btn grid-item">Logout</button>
+                    <button type="submit" class="btn btn-link">Logout</button>
                 </form>
+                <a class="btn bg-primary grid-item" href="/tasks">Report Danger</a>
             @else
-                <span class="grid-item">Request</span>
-                <span class="grid-item">Open Requests</span>
+                <a href="/tasks/index" class="grid-item">Open Requests</a>
                 <a href="/users" class="grid-item">Register</a>
                 <a href="/login" class="grid-item">Login</a>
-                <a class="green-btn grid-item" href="/tasks">Report Danger</a>
-                {{-- <button aria-label="Main Menu" aria-expanded="false" type="button" class=""
-                    data-toggle="offcanvas_lee" data-target="left">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="24" height="24">
-                        <rect x="1" y="4" rx="0.5" fill="currentColor" width="14" height="1.5"></rect>
-                        <rect x="1" y="9" rx="0.5" fill="currentColor" width="10" height="1.5"></rect>
-                        <rect x="1" y="14" rx="0.5" fill="currentColor" width="14" height="1.5"></rect>
-                    </svg>
-                </button> --}}
+                <a class="btn bg-primary grid-item" href="/tasks">Report Danger</a>
+
             @endauth
         </nav>
     </header>

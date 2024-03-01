@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+
+// Generate Random IP Addresses
 function generateRandomIPAddress() {
   // Exclude private and reserved ranges
   $privateRanges = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16'];
@@ -20,5 +24,31 @@ function generateRandomIPAddress() {
   }
 
   return $ipAddress;
+}
+
+
+// Cookie Functions
+
+
+// Get Cookies
+function getTaskCookie(){
+  // Get cookie and convert it into array
+  $json = Cookie::get('task_id');
+  $array = json_decode($json);
+  
+  // $array must be of type countable|array, not null
+  $array = isset($array) ? $array : [];
+  return $array;
+}
+
+// Store a new cookie
+function storeTaskCookie($taskId){
+  $array = getTaskCookie();
+  // If values are in array, append else create 
+  $array = isset($array) ? array_merge($array, [$taskId]) : [$taskId];
+  echo count($array) . "<br>";
+  echo implode(' ',$array);
+  $json = json_encode($array);
+  Cookie::queue(cookie::make('task_id', $json, 10080));
 }
 

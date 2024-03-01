@@ -2,9 +2,10 @@
 
 @php
     $h1 = "What's happening?";
+    $span = '';
 @endphp
 @section('content')
-    <x-banner :h1=$h1 />
+    <x-banner :h1=$h1 :span=$span />
 
     <div>
         @if ($errors->any())
@@ -16,7 +17,7 @@
         @endif
     </div>
 
-    <form method="post" class="citizen-report-form" method="post" action="{{ route('tasks.store') }}">
+    <form method="post" class="form" method="post" action="{{ route('tasks.store') }}">
         @csrf
         @method('post')
         <span>
@@ -65,7 +66,7 @@
         </div>
 
         <div class="btn-container">
-            <button type="submit" value="SUBMIT" class="green-btn">SUBMIT
+            <button type="submit" value="SUBMIT" class="btn bg-primary">SUBMIT
             </button>
         </div>
     </form>

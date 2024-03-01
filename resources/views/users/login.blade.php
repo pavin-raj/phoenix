@@ -1,14 +1,15 @@
 @extends('layouts.layout')
 
 @php
-    $h1 = "What's happening?";
+    $h1 = 'Sign in to';
+    $span = 'make change';
 @endphp
 @section('content')
-    <x-banner :h1=$h1 />
+    <x-banner :h1=$h1 :span=$span />
 
 
-    
-    <form method="post" class="citizen-report-form" method="post" action="/users/authenticate">
+
+    <form method="post" class="form" method="post" action="/users/authenticate">
         @csrf
         @method('post')
 
@@ -36,7 +37,7 @@
         </div>
 
         <div class="btn-container">
-            <button type="submit" value="SUBMIT" class="green-btn">SUBMIT
+            <button type="submit" value="SUBMIT" class="btn bg-primary">SUBMIT
             </button>
         </div>
     </form>

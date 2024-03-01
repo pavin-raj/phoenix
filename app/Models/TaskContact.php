@@ -13,6 +13,6 @@ class TaskContact extends Model
     protected $fillable = ['task_id', 'phone', 'email'];
 
     public function task(){
-        $this->hasOne(Task::class);
+        return $this->hasOne(Task::class);
     }
 }
