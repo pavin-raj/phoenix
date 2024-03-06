@@ -18,7 +18,7 @@ return new class extends Migration
                   ->nullable()
                   ->constrained()
                   ->onDelete('cascade');
-            $table->string('status')->default('New');
+            $table->string('status')->default('Open');
             $table->string('priority')->default('High');
             $table->decimal('latitude', 10, 8);
             $table->decimal('longitude', 11, 8);

@@ -36,13 +36,12 @@ Route::post('/users/authenticate', [UserController::class, 'authenticate']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
 
 
-// Display page to create tasks
-Route::get('/tasks', [TaskController::class, 'create']);
-// Create new task
-Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
 
-// Open Requests
+Route::get('/tasks', [TaskController::class, 'create']);
+Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
 Route::get('/tasks/index', [TaskController::class, 'index']);
+Route::get('/tasks/show/{id}',[TaskController::class, 'show']);
+Route::post('/tasks/update/{id}',[TaskController::class, 'update']);
 
 
 // Log Files - For testing purposes only. 

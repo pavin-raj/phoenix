@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\User;
 use App\Models\TaskContact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Stevebauman\Location\Facades\Location;
 
 class TaskController extends Controller
@@ -13,8 +15,13 @@ class TaskController extends Controller
 
     // Show all tasks/requests
     public function index(){
-        $taskIds = getTaskCookie();
-        $tasks = Task::whereIn('id', $taskIds)->get();
+        if(Auth::guest() || Auth::user()->hasRole('citizen')){
+            $taskIds = getTaskCookie();
+            $tasks = Task::whereIn('id', $taskIds)->get();
+        }
+        else{
+            $tasks = Task::all();
+        }
         return view('tasks.index', ['tasks' => $tasks]);
     }
 
@@ -61,4 +68,49 @@ class TaskController extends Controller
     }
 
 
+    public function show($id) {
+        $task = Task::find($id);
+        $priority = ['High', 'Moderate', 'Low', 'Very Low'];
+        $status = ['Open', 'On Hold', 'Closed'];
+        return view('tasks.show', ['task'=>$task, 'priority'=>$priority, 'status'=> $status]);
+    }
+
+
+    public function update(Request $request, $id){
+        // Get task matching id
+        $task = Task::find($id);
+
+        // Updating task data in Tasks table
+        $data = $request->validate([
+            'description'=>'required'
+        ]);
+        $task->description = $data['description'];
+        $task->city = $request->city;
+        $task->status = $request->status;
+        $task->priority = $request->priority;
+        $task->state =  $request->state;
+        
+        $task->update();
+
+        // Get task contact matching taskid
+        $task_contact = TaskContact::where('task_id', $task->id)->first();
+        
+
+        // Updating task contact info in Task_Contact table
+        $data=$request->validate([
+            'phone' => 'nullable|digits: 10',
+            'email' => 'nullable|email:rfc,dns',
+        ]);
+        $task_contact->phone = $data['phone'];
+        $task_contact->email = $data['email'];
+        $task_contact->secondary_phone = $request->secondary_phone;
+        $task_contact->secondary_email = $request->secondary_email;
+        $task_contact->address = $request->address;
+        $task_contact->update();
+
+        return redirect()->back();
+
+    }
 }
+
+
