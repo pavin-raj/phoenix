@@ -14,16 +14,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
-        // \App\Models\Role::create(['name'=>'admin']);
-        // \App\Models\Role::create(['name'=>'coordinator']);
-        // \App\Models\Role::create(['name'=>'emergency responder']);
-        // \App\Models\Role::create(['name'=>'volunteer']);
-        // \App\Models\Role::create(['name'=>'citizen']);        
+        \App\Models\Role::create(['name'=>'admin']);
+        \App\Models\Role::create(['name'=>'coordinator']);
+        \App\Models\Role::create(['name'=>'emergency responder']);
+        \App\Models\Role::create(['name'=>'volunteer']);
+        \App\Models\Role::create(['name'=>'citizen']);        
 
-        $this->call([
-            UserSeeder::class
-        ]);
+        // $this->call([
+        //     UserSeeder::class
+        // ]);
 
-        Task::factory()->count(10)->create();
+        // Task::factory()->count(10)->create();
     }
 }

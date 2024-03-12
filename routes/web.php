@@ -42,6 +42,7 @@ Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store
 Route::get('/tasks/index', [TaskController::class, 'index']);
 Route::get('/tasks/show/{id}',[TaskController::class, 'show']);
 Route::post('/tasks/update/{id}',[TaskController::class, 'update']);
+Route::get('/tasks/show/{id}/assignees',[TaskController::class, 'assignees']);
 
 
 // Log Files - For testing purposes only. 

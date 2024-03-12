@@ -1,11 +1,21 @@
 @extends('layouts.layout')
 
 @php
-    $nav = ["/tasks/show/$task->id" => 'Overview', "/tasks/show/$task->id/notes" => 'Add Notes', "/tasks/show/$task->id/assignees" => 'Assignees'];
+    $nav = [
+        "/tasks/show/$task->id" => 'Overview',
+        "/tasks/show/$task->id/notes" => 'Add Notes',
+        "/tasks/show/$task->id/assignees" => 'Assignees',
+    ];
 @endphp
 
 @section('content')
     <x-banner h1="Task" span="Updation" />
+
+
+
+    <x-card-nav :nav=$nav></x-card-nav>
+
+
 
     <div>
         @if ($errors->any())
@@ -17,11 +27,7 @@
         @endif
     </div>
 
-
-
-    <x-card-nav :nav=$nav></x-card-nav>
-
-
+    
 
     <div class="content-wrapper">
         <form method="post" class="card card-lg" method="post" action="{{ url('tasks/update', $task->id) }}">

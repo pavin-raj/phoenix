@@ -19,4 +19,8 @@ class Task extends Model
     public function task_contact(){
         return $this->hasOne(TaskContact::class);
     }
+
+    public function assignees(){
+        return $this->hasMany(Assignee::class);
+    }
 }

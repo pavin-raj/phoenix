@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Assignee;
 use App\Models\TaskContact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,8 +20,14 @@ class TaskController extends Controller
             $taskIds = getTaskCookie();
             $tasks = Task::whereIn('id', $taskIds)->get();
         }
-        else{
+        else if (Auth::user()->hasRole('admin')){
             $tasks = Task::all();
+        }
+        else if ((Auth::user()->hasRole('emergency responder')) || (Auth::user()->hasRole('volunteer'))){
+
+           $tasks = Task::with('assignees')->whereHas('assignees', function ($query) {
+                $query->where('user_id', Auth::user()->id);
+            })->get();
         }
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -110,6 +117,17 @@ class TaskController extends Controller
 
         return redirect()->back();
 
+    }
+
+    public function assignees($id){
+        $userId = Assignee::select('user_id')->where('task_id', $id)->get();
+        $users=[];
+
+        foreach ($userId as $uid){
+            $users = array_merge($users, [User::find($uid)->toArray()]);
+        }
+
+        return view('tasks.assignees', ['task_id' => $id, 'users' => $users]);
     }
 }
 
