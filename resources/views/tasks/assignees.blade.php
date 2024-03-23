@@ -3,7 +3,7 @@
 @php
     $nav = [
         "/tasks/show/$task_id" => 'Overview',
-        "/tasks/show/$task_id/notes" => 'Add Notes',
+        "/tasks/show/$task_id/messages" => 'Add Messages',
         "/tasks/show/$task_id/assignees" => 'Assignees',
     ];
 @endphp

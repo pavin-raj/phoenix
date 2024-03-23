@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\User;
+use App\Models\Message;
 use App\Models\Assignee;
 use App\Models\TaskContact;
 use Illuminate\Http\Request;
@@ -117,6 +118,39 @@ class TaskController extends Controller
 
         return redirect()->back();
 
+    }
+
+
+
+    public function messages($id){
+        $messages = Task::find($id)->messages()->latest()->get();
+        return view('tasks.messages', ['task_id' => $id,'messages' => $messages]);
+    }
+
+
+    public function storeMessage($id, Request $request){
+        $request->validate([
+            'body'=>'required|string',
+            'file'=>'nullable|mimes:jpg,jpeg,png,webp'
+        ]);
+
+        if($request->has('file')){
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+
+            $path = 'uploads/messages/';
+            $filename = time(). '.' . $extension;
+            $file->move($path, $filename);
+        }
+
+        Message::create([
+            'body' => $request->body,
+            'file' => $path.$filename,
+            'task_id' => $id,
+            'user_id' => auth()->id()
+        ]);
+
+        return redirect()->back();
     }
 
     public function assignees($id){

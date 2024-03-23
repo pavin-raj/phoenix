@@ -21,7 +21,7 @@
 
     <x-flash-message />
 
-    <header>
+    <header class="header">
         <a href="/" class="logo">
             <svg viewBox="0 0 304.639 78.468" xmlns="http://www.w3.org/2000/svg">
                 <g id="svgGroup" stroke-linecap="round" fill-rule="evenodd" font-size="9pt" stroke="#ffffff"
@@ -34,6 +34,11 @@
         <nav class="grid">
             @auth
 
+                <a href="/alerts/index" class="grid-item">Alerts</a>
+                @can('isAdmin')
+                    <a href="/alerts/create" class="grid-item">Declare Emergency</a>
+                @endcan
+
                 {{-- For all users except citizen --}}
                 @unless (auth()->user()->role_id == 5)
                     <a href="/users" class="grid-item">Add Users</a>
@@ -44,14 +49,15 @@
                     <a href="/tasks/index" class="grid-item">Open Requests</a>
                 @endcan
 
-
                 <form action="{{ route('logout') }}" method="post" class="grid-item">
                     @csrf
                     @method('post')
                     <button type="submit" class="btn btn-link">Logout</button>
                 </form>
+                <a href="/users/show/{{ Auth::user()->id }}" class="grid-item">Profile</a>
                 <a class="btn bg-primary grid-item" href="/tasks">Report Danger</a>
             @else
+                <a href="/alerts/index" class="grid-item">Alerts</a>
                 <a href="/tasks/index" class="grid-item">Open Requests</a>
                 <a href="/users" class="grid-item">Register</a>
                 <a href="/login" class="grid-item">Login</a>

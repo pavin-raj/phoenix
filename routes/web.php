@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AlertController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +25,13 @@ Route::get('/', function () {
 Route::get('/users', [UserController::class, 'create']);
 // Create new user
 Route::post('/users/store', [UserController::class, 'store']);
+Route::get('/users/show/{id}', [UserController::class, 'show']);
 
+
+Route::get('/alerts/index', [AlertController::class, 'index'])->name('alerts.index');
+Route::get('/alerts/create', [AlertController::class, 'create']);
+Route::post('/alerts/store', [AlertController::class, 'store'])->name('alerts.store');
+Route::get('/alerts/show/{id}', [AlertController::class, 'show']);
 
 
 
@@ -42,6 +49,8 @@ Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store
 Route::get('/tasks/index', [TaskController::class, 'index']);
 Route::get('/tasks/show/{id}',[TaskController::class, 'show']);
 Route::post('/tasks/update/{id}',[TaskController::class, 'update']);
+Route::get('/tasks/show/{id}/messages',[TaskController::class, 'messages']);
+Route::post('/tasks/show/{id}/messages/store',[TaskController::class, 'storeMessage'])->name('messages.store');
 Route::get('/tasks/show/{id}/assignees',[TaskController::class, 'assignees']);
 
 

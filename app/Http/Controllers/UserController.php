@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
-use App\Models\User;
 
 class UserController extends Controller
 {
@@ -74,5 +75,8 @@ class UserController extends Controller
     }
 
 
-    
+    public function show($id){
+        $user = Auth::user();
+        return view('users.show', ['user'=> $user]);
+    }
 }

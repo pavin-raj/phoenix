@@ -23,4 +23,8 @@ class Task extends Model
     public function assignees(){
         return $this->hasMany(Assignee::class);
     }
+
+    public function messages(){
+        return $this->hasMany(Message::class);
+    }
 }

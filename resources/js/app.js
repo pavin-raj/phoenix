@@ -1,7 +1,7 @@
 import './bootstrap';
 
 
-// window.Vue = require('vue');
+// window.Vue = require('vue').default();
 
 
 window.edit = function () {
@@ -16,12 +16,12 @@ window.edit = function () {
     // Convert NodeList to Array
     input = Array.from(input)
     select = Array.from(select)
-    p = Array.from(p); 
+    p = Array.from(p);
     textarea = Array.from(textarea)
     button = Array.from(button)
 
     // Concat all elements
-    var elements = input.concat(p, textarea, button, select);
+    var elements = input.concat(select, p, textarea, button);
 
     for (const elem of elements) {
         // Remove hidden if it exists, else add hidden

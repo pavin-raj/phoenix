@@ -116,7 +116,7 @@ button.btn {
 
 /* Navbar */
 
-header {
+.header {
     background-color: rgb(59 221 143);
     display: grid;
     grid-template-columns: 4fr 2fr;
@@ -385,4 +385,13 @@ table tr:last-child td:first-child {
     
 table tr:last-child td:last-child {
     border-bottom-right-radius: 1.2rem;
+}
+
+
+
+
+/* Alerts - from template */
+
+.ch-110 {
+    max-width: 110ch;
 }

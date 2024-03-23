@@ -3,7 +3,7 @@
 @php
     $nav = [
         "/tasks/show/$task->id" => 'Overview',
-        "/tasks/show/$task->id/notes" => 'Add Notes',
+        "/tasks/show/$task->id/messages" => 'Add Messages',
         "/tasks/show/$task->id/assignees" => 'Assignees',
     ];
 @endphp
@@ -27,7 +27,7 @@
         @endif
     </div>
 
-    
+
 
     <div class="content-wrapper">
         <form method="post" class="card card-lg" method="post" action="{{ url('tasks/update', $task->id) }}">
@@ -73,6 +73,7 @@
                         value={{ $task->task_contact->secondary_phone }}>
                     <p class="control text-lime-600 text-lg">{{ $task->task_contact->secondary_phone }}</p>
                 </div>
+
                 <div class="w-2/5">
                     <span>
                         <label id="">Secondary Email</label>
