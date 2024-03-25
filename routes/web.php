@@ -26,6 +26,7 @@ Route::get('/users', [UserController::class, 'create']);
 // Create new user
 Route::post('/users/store', [UserController::class, 'store']);
 Route::get('/users/show/{id}', [UserController::class, 'show']);
+Route::post('/users/{id}/update', [UserController::class, 'update'])->name('users.update');
 
 
 Route::get('/alerts/index', [AlertController::class, 'index'])->name('alerts.index');

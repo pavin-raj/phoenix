@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\VolunteerSkill;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
@@ -77,6 +78,70 @@ class UserController extends Controller
 
     public function show($id){
         $user = Auth::user();
-        return view('users.show', ['user'=> $user]);
+        $volunteer_skills = User::find($id)->volunteer_skills()->get();
+
+        $skills = ['First Aid Skills', 'CPR', 'IT', 'Data Recovery', 'Construction worker', 'Carpentry', 
+        'Electrician', 'Plumbing', 'Forklifts', 'Generator Operator', 'Fundraising', 'Damage Assessment', 
+        'Needs Identification', 'Data Collection', 'Data Analysis', 'Inventory Management', 'Warehouse Operations', 
+        'Transportation', 'Driving', 'Medical Professional', 'Doctor', 'Nurse', 'Mental health professional', 
+        'Counselor', 'Therapist', 'Public Health Trainer', 'Multilingual', 'English langugae', 'Malayalam language', 
+        'Tamil language', 'Arabic language', 'Telugu language', 'Tulu language', 'Security and crowd control'];
+
+        return view('users.show', ['user'=> $user, 'volunteer_skills' => $volunteer_skills , 'skills'=>$skills]);
+    }
+
+    public function update($id, Request $request){
+        $user = User::find($id);
+        $request->validate([
+            'name' => 'required|regex:/^[a-zA-Z ]+$/',
+            'image'=>'nullable|mimes:jpg,jpeg,png,webp',
+            'email' => $request->email === $user->email ? 'required|email' : 'required|email|unique:users',
+        ]);
+
+        if($request->has('image')){
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+
+            $path = 'uploads/profile/';
+            $filename = time(). '.' . $extension;
+            $file->move($path, $filename);
+        }
+
+
+        User::find($id)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'image' => $path.$filename
+        ]);
+
+
+        VolunteerSkill::where('user_id', $id)->delete();
+        foreach($request->skills as $skill){
+            VolunteerSkill::create([
+                'user_id' => $id,
+                'skill' => $skill
+            ]);
+        }
+
+        return redirect()->back();
+
+
+        // if($request->has('file')){
+        //     $file = $request->file('file');
+        //     $extension = $file->getClientOriginalExtension();
+
+        //     $path = 'uploads/messages/';
+        //     $filename = time(). '.' . $extension;
+        //     $file->move($path, $filename);
+        // }
+
+        // Message::create([
+        //     'body' => $request->body,
+        //     'file' => $path.$filename,
+        //     'task_id' => $id,
+        //     'user_id' => auth()->id()
+        // ]);
+
+        // return redirect()->back();
     }
 }
