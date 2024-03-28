@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Scout\Searchable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
@@ -12,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Searchable;
 
     /**
      * The attributes that are mass assignable.
@@ -47,6 +48,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    
+
     public function tasks(){
         return $this->hasMany(Task::class);
     }
@@ -62,6 +65,17 @@ class User extends Authenticatable
     public function volunteer_skills(){
         return $this->hasMany(VolunteerSkill::class);
     }
+
+
+    public function toSearchableArray()
+    {
+        return [
+        'name' => $this->name,
+        'role_id' => (int) $this->role_id,
+        'volunteer_skills' => $this->volunteer_skills(),
+    ];
+    }
+    
 
     public function hasRole($role)
     {

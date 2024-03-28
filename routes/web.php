@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Cookie;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlertController;
+use App\Http\Controllers\SearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,15 +45,25 @@ Route::post('/users/authenticate', [UserController::class, 'authenticate']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout')->middleware('auth');
 
 
+Route::group(['prefix'=>'tasks/'], function(){
 
-Route::get('/tasks', [TaskController::class, 'create']);
-Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
-Route::get('/tasks/index', [TaskController::class, 'index']);
-Route::get('/tasks/show/{id}',[TaskController::class, 'show']);
-Route::post('/tasks/update/{id}',[TaskController::class, 'update']);
-Route::get('/tasks/show/{id}/messages',[TaskController::class, 'messages']);
-Route::post('/tasks/show/{id}/messages/store',[TaskController::class, 'storeMessage'])->name('messages.store');
-Route::get('/tasks/show/{id}/assignees',[TaskController::class, 'assignees']);
+    Route::get('', [TaskController::class, 'create']);
+    Route::post('store', [TaskController::class, 'store'])->name('tasks.store');
+    Route::get('index', [TaskController::class, 'index']);
+    Route::post('update/{id}',[TaskController::class, 'update']);
+
+    Route::group(['prefix'=>'show/{id}/'], function(){
+
+    Route::get('',[TaskController::class, 'show']);
+    Route::get('messages',[TaskController::class, 'messages']);
+    Route::post('messages/store',[TaskController::class, 'storeMessage'])->name('messages.store');
+    Route::get('assignees',[TaskController::class, 'assignees']);
+    Route::get('emergency_responders',[TaskController::class, 'assignees']);
+    Route::get('volunteers',[TaskController::class, 'assignees']);
+    Route::get('request_help', [SearchController::class, 'index'])->name('request_help');
+    });    
+});
+
 
 
 // Log Files - For testing purposes only. 

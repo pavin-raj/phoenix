@@ -27,20 +27,22 @@
         @endif
     </div>
 
-    <div class="content-wrapper">
-        <form method="post" class="card w-6/12 my-9" action="{{ route('messages.store', $task_id) }}"
-            enctype="multipart/form-data">
-            @csrf
-            @method('post')
-            <div class="flex flex-row items-center gap-x-2 text-green-600">
-                <label for="file">
-                    <i class="fa-solid fa-paperclip"></i>
-                    <input type="file" id="file" name="file" class="hidden">
-                </label>
-                <input type="text" name="body" id="body">
-                <button type="submit" class="fa-regular fa-paper-plane text-white bg-green-600 p-4 rounded-md"></button>
-        </form>
-    </div>
+    <div>
+        <div class="content-wrapper">
+            <form method="post" class="card w-6/12 my-9" action="{{ route('messages.store', $task_id) }}"
+                enctype="multipart/form-data">
+                @csrf
+                @method('post')
+                <div class="flex flex-row items-center gap-x-2 text-green-600">
+                    <label for="file">
+                        <i class="fa-solid fa-paperclip"></i>
+                        <input type="file" id="file" name="file" class="hidden">
+                    </label>
+                    <input type="text" name="body" id="body">
+                    <button type="submit"
+                        class="fa-regular fa-paper-plane text-white bg-green-600 p-4 rounded-md"></button>
+            </form>
+        </div>
     </div>
 
     @unless (count($messages) == 0)
@@ -62,7 +64,8 @@
                     </div>
                 @endforeach
             </div>
-        @endunless
+        </div>
+    @endunless
 
 
-    @endsection
+@endsection

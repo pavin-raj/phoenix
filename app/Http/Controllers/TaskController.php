@@ -10,6 +10,8 @@ use App\Models\TaskContact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Stevebauman\Location\Facades\Location;
 
 class TaskController extends Controller
@@ -153,16 +155,46 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function assignees($id){
+    public function getAssignees($id){
         $userId = Assignee::select('user_id')->where('task_id', $id)->get();
-        $users=[];
+        $assignees=[];
 
         foreach ($userId as $uid){
-            $users = array_merge($users, [User::find($uid)->toArray()]);
+            $assignees = array_merge($assignees, [User::find($uid)->toArray()]);
+        }
+        return $assignees;
+    }
+
+
+    public function assignees($id){
+        $userId = Assignee::select('user_id')->where('task_id', $id)->get();
+        $assignees=[];
+
+        foreach ($userId as $uid){
+            $assignees = array_merge($assignees, [User::find($uid)->toArray()]);
         }
 
-        return view('tasks.assignees', ['task_id' => $id, 'users' => $users]);
+        if((Route::current()->uri) == "tasks/show/{id}/assignees" )
+        return view('tasks.assignees.index', ['task_id' => $id, 'assignees' => $assignees]);
+
+        else if((Route::current()->uri) == "tasks/show/{id}/emergency_responders" )
+        return view('tasks.assignees.emergency_responders', ['task_id' => $id, 'assignees' => $assignees]);
+
+        else if((Route::current()->uri) == "tasks/show/{id}/volunteers" )
+        return view('tasks.assignees.volunteers', ['task_id' => $id, 'assignees' => $assignees]);
     }
+
+    // public function emergency_responders($id){
+    //     $assignees = $this->getAssignees($id);
+    //     return view('tasks.assignees.emergency_responders', ['task_id' => $id, 'assignees' => $assignees]);
+    // }
+
+    // public function volunteers($id){
+    //     $assignees = $this->getAssignees($id);
+    //     return view('tasks.assignees.volunteers', ['task_id' => $id, 'assignees' => $assignees]);
+    // }
+
+
 }
 
 
