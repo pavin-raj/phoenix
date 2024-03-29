@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Assignee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -11,10 +12,37 @@ class SearchController extends Controller
     public function index($id, Request $request)
     {
         
-        $assignees = User::whereRaw('role_id = 3 or role_id = 4')->paginate(9);
+        $assignees = User::whereIn('role_id', [3, 4])
+        ->whereDoesntHave('assignees', function ($query) use ($id)
+        {
+            $query->where('task_id', $id);
+        })->paginate(9);
+        
 
         if($request->has('search'))
-        $assignees = User::search($request->search)->whereIn('role_id', [3,4])->paginate(9);
+        {
+            $users = User::search($request->search)->whereIn('role_id', [3,4])->get();
+            $assigned_users = Assignee::where('task_id', $id)->get();
+            $assignees = collect();
+            foreach($users as $user)
+            {
+                // Flag to check if any user in $users is assigned to this task
+                $found = false;
+                foreach($assigned_users as $assigned_user)
+                {
+                    if($user->id == $assigned_user->user_id)
+                    {
+                        // True only if they have been assigneed to this task
+                        $found = true;
+                        break;
+                    }
+                }
+                if (!$found)
+                    // Executes only if user is not assigned
+                    $assignees->push($user);
+            }
+            $assignees = $assignees->paginate(9);
+        }
 
         return view('tasks.assignees.request_help', ['task_id' => $id, 'assignees' => $assignees]);
     }

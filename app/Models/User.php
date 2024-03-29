@@ -66,6 +66,10 @@ class User extends Authenticatable
         return $this->hasMany(VolunteerSkill::class);
     }
 
+    public function assignees(){
+        return $this->hasMany(Assignee::class);
+    }
+
 
     public function toSearchableArray()
     {
