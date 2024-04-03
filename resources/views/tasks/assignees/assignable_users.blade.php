@@ -25,7 +25,7 @@
         <div class="container mx-auto mt-0">
             <div class="flex flex-wrap gap-16 justify-center">
 
-                <form method="get" class="card w-4/6 my-9" action="{{ route('request_help', $task_id) }}"
+                <form method="get" class="card w-4/6 my-9" action="{{ route('assignable_users', $task_id) }}"
                     enctype="multipart/form-data">
                     @csrf
                     @method('post')

@@ -33,6 +33,8 @@
                     @endforeach
                 </div>
             </div>
+        @else
+            <p>No Assignees</p>
         @endunless
 
     </div>

@@ -1,7 +1,15 @@
 @extends('layouts.layout')
 
 @php
-    $nav = ["/tasks/index" => "All Tasks", " " => "Unassigned Tasks", "" => "Open Tasks"];
+    if (Auth::user() != null) {
+        if (Auth::user()->hasRole('admin')) {
+            $nav = ['/tasks/index' => 'All Tasks', ' ' => 'Unassigned Tasks', '' => 'Assigned Tasks'];
+        } elseif (Auth::user()->hasRole('emergency responder')) {
+            $nav = [];
+        } elseif (Auth::user()->hasRole('volunteer')) {
+            $nav = ['/tasks/index' => 'Requested Tasks', '/tasks/accepted' => 'Accepted Tasks'];
+        }
+    }
 @endphp
 
 
@@ -18,7 +26,11 @@
         <x-card-nav :nav=$nav></x-card-nav>
 
         <div class="content-wrapper">
-            <x-tasks.table :tasks=$tasks></x-tasks.table>
+            @if (count($tasks) != 0)
+                <x-tasks.table :tasks=$tasks></x-tasks.table>
+            @else
+            No Requested Tasks!
+            @endif
         </div>
     @endif
 @endsection

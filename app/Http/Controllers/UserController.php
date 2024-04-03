@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Assignee;
 use Illuminate\Http\Request;
 use App\Models\VolunteerSkill;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules\Password;
 
 class UserController extends Controller
@@ -77,7 +79,8 @@ class UserController extends Controller
 
 
     public function show($id){
-        $user = Auth::user();
+        $task_id = Session::get('task_id');
+        $user = User::find($id);
         $volunteer_skills = User::find($id)->volunteer_skills()->get();
 
         $skills = ['First Aid Skills', 'CPR', 'IT', 'Data Recovery', 'Construction worker', 'Carpentry', 
@@ -87,7 +90,21 @@ class UserController extends Controller
         'Counselor', 'Therapist', 'Public Health Trainer', 'Multilingual', 'English langugae', 'Malayalam language', 
         'Tamil language', 'Arabic language', 'Telugu language', 'Tulu language', 'Security and crowd control'];
 
-        return view('users.show', ['user'=> $user, 'volunteer_skills' => $volunteer_skills , 'skills'=>$skills]);
+
+        // If the profile page is accessed from assignable users page in tasks
+        if( $task_id != null)
+            $request_status = Assignee::select('is_requested','is_accepted', 'is_rejected')
+            ->where('task_id', $task_id)
+            ->where('user_id', $id)
+            ->first();
+        else
+            $request_status = ['is_requested' => 0, 'is_accepted' => 0, 'is_rejected' => 0];
+
+        return view('users.show', 
+        ['user'=> $user, 
+        'volunteer_skills' => $volunteer_skills , 
+        'skills'=> $skills, 
+        'request_status' => $request_status]);
     }
 
     public function update($id, Request $request){

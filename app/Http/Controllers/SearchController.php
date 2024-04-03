@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Assignee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class SearchController extends Controller
 {
@@ -15,14 +16,21 @@ class SearchController extends Controller
         $assignees = User::whereIn('role_id', [3, 4])
         ->whereDoesntHave('assignees', function ($query) use ($id)
         {
-            $query->where('task_id', $id);
+            $query->where('task_id', $id)->where('is_accepted', true);
         })->paginate(9);
         
 
         if($request->has('search'))
         {
             $users = User::search($request->search)->whereIn('role_id', [3,4])->get();
-            $assigned_users = Assignee::where('task_id', $id)->get();
+
+            $assigned_users = Assignee::where('task_id', $id)
+            ->where(function ($query) {
+                $query->where('is_accepted', 1)
+                ->orWhere('is_rejected', 1);
+            })
+            ->get();
+
             $assignees = collect();
             foreach($users as $user)
             {
@@ -44,7 +52,7 @@ class SearchController extends Controller
             $assignees = $assignees->paginate(9);
         }
 
-        return view('tasks.assignees.request_help', ['task_id' => $id, 'assignees' => $assignees]);
+        return view('tasks.assignees.assignable_users', ['task_id' => $id, 'assignees' => $assignees]);
     }
     
 }

@@ -35,3 +35,8 @@ window.edit = function () {
     }
 }
 
+
+window.submitForm = function () {
+    document.getElementById('secondForm').submit();
+}
+

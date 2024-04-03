@@ -9,6 +9,9 @@ class Assignee extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+    protected $guarded = [];
+
     public function task(){
         return $this->belongsTo(Task::class);
     }

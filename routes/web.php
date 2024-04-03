@@ -6,6 +6,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlertController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\AssigneeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::group(['prefix'=>'tasks/'], function(){
     Route::get('', [TaskController::class, 'create']);
     Route::post('store', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('index', [TaskController::class, 'index']);
+    Route::get('accepted', [TaskController::class, 'accepted_tasks']);
     Route::post('update/{id}',[TaskController::class, 'update']);
 
     Route::group(['prefix'=>'show/{id}/'], function(){
@@ -57,13 +59,15 @@ Route::group(['prefix'=>'tasks/'], function(){
     Route::get('',[TaskController::class, 'show']);
     Route::get('messages',[TaskController::class, 'messages']);
     Route::post('messages/store',[TaskController::class, 'storeMessage'])->name('messages.store');
-    Route::get('assignees',[TaskController::class, 'assignees']);
-    Route::get('emergency_responders',[TaskController::class, 'assignees']);
-    Route::get('volunteers',[TaskController::class, 'assignees']);
-    Route::get('request_help', [SearchController::class, 'index'])->name('request_help');
+    Route::get('assignees',[AssigneeController::class, 'index'])->name('assignees');
+    Route::get('emergency_responders',[AssigneeController::class, 'index']);
+    Route::get('volunteers',[AssigneeController::class, 'index']);
+    Route::get('assignable_users', [SearchController::class, 'index'])->name('assignable_users');
     });    
 });
 
+Route::post('/request_help/{user_id}', [AssigneeController::class, 'store'])->name('request_help');
+Route::patch('/assignees/update', [AssigneeController::class, 'update']);
 
 
 // Log Files - For testing purposes only. 

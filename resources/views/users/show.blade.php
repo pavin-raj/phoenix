@@ -2,11 +2,7 @@
 
 @section('content')
     <main class="profile-page bg-secondary">
-
-
-
         <section class="py-40">
-
             <form class="flex justify-center container mx-auto px-4 text-black" method="post" enctype="multipart/form-data"
                 action="{{ route('users.update', $user->id) }}">
                 @csrf
@@ -28,12 +24,47 @@
                                     @endif
                                 </div>
                             </div>
+
                             <div class="w-full lg:w-4/12 px-4 lg:order-3 lg:text-right lg:self-center">
-                                <div class="py-6 px-3 mt-32 sm:mt-0">
-                                    <a class="flex justify-end gap-2 items-center text-green-600 text-lg cursor-pointer"
-                                        onclick="edit()"><i class="fa-solid fa-pen"></i> Edit</a>
+                                <div class="py-6 px-3 mt-32 sm:mt-0 flex justify-end gap-8">
+                                    @if ($user->id == auth()->id())
+                                        <a class="flex justify-end gap-2 items-center text-green-600 text-lg cursor-pointer"
+                                            onclick="edit()"><i class="fa-solid fa-pen"></i> Edit</a>
+                                    @endif
+
+                                    @can('isAdmin')
+                                        @if ($user->role_id == 3)
+                                            @if ($request_status == null or $request_status->is_requested === 0)
+                                                <a class="flex justify-end gap-2 items-center text-green-600 text-lg cursor-pointer"
+                                                    onclick="submitForm()">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                    Add to task
+                                                </a>
+                                            @endif
+                                        @endif
+                                    @endcan
+
+                                    @can('isAdminOrEmergencyResponder')
+                                        @if ($user->role_id == 4)
+                                            @if ($request_status == null or $request_status->is_requested === 0)
+                                                <a class="flex justify-end gap-2 items-center text-green-600 text-lg cursor-pointer"
+                                                    onclick="submitForm()">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                    Request Help
+                                                </a>
+                                            @elseif($request_status->is_requested == 1 && $request_status->is_accepted == 0 && $request_status->is_rejected == 0)
+                                                <p
+                                                    class="flex justify-end gap-2 items-center text-red-400 text-lg cursor-not-allowed">
+                                                    <i class="fa-solid fa-circle-info"></i>
+                                                    Request already sent!
+                                                </p>
+                                            @endif
+                                        @endif
+                                    @endcan
+
                                 </div>
                             </div>
+
                             <div class="w-full lg:w-4/12 px-4 lg:order-1">
                                 {{-- <div class="flex justify-center py-4 lg:pt-4 pt-8">
                                     <div class="mr-4 p-3 text-center">
@@ -54,17 +85,8 @@
                                 </div> --}}
                             </div>
                         </div>
+
                         <div class="flex flex-col justify-center items-center text-center mt-4">
-
-                            {{-- <p class="text-4xl font-semibold leading-normal mb-2 text-gray-800 mb-2">
-                                {{ $user->name }}
-                            </p>
-                            <input id="name" type="text" class="control hidden" name="name"
-                                value="{{ $user->name }}"> --}}
-
-
-
-
                             <div
                                 class="w-2/5 flex justify-center items-center text-sm leading-normal mt-2 mb-3 text-gray-500 font-bold">
                                 <i class="fa-solid fa-user mr-2 text-lg text-emerald-700"></i>
@@ -95,7 +117,7 @@
 
 
 
-                            @can('isVolunteer')
+                            @if ($user->role_id == 4)
                                 <div class="flex justify-between items-center mt-9 text-lg">
                                     <span class="text-emerald-600 pr-2">Skills</span>
 
@@ -110,7 +132,8 @@
                                 </div>
 
                                 <div class="hidden justify-between items-center mt-9 w-full" id="multi-select">
-                                    <select name="skills[]" id="skills" multiple multiselect-search="true" class="">
+                                    <select name="skills[]" id="skills" multiple multiselect-search="true"
+                                        class="">
                                         @foreach ($skills as $skill)
                                             @if (count($volunteer_skills) != 0)
                                                 @foreach ($volunteer_skills as $index => $v_skill)
@@ -132,7 +155,7 @@
 
                                 </select>
                             </div>
-                        @endcan
+                        @endif
 
                         <div class="btn-container">
                             <button type="submit" value="SUBMIT" class="btn bg-primary hidden">UPDATE
@@ -159,4 +182,8 @@
         </div>
     </section>
 </main>
+{{-- Form for requesting help --}}
+<form action="{{ route('request_help', $user->id) }}" method="post" id="secondForm">
+    @csrf
+</form>
 @endsection

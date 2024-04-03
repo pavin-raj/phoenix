@@ -8,6 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -58,7 +59,7 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class);
     }
 
-    public function messaages(){
+    public function messages(){
         return $this->hasMany(Message::class);
     }
 
@@ -76,8 +77,12 @@ class User extends Authenticatable
         return [
         'name' => $this->name,
         'role_id' => (int) $this->role_id,
-        'volunteer_skills' => $this->volunteer_skills(),
     ];
+    }
+
+    public function makeSearchableUsing(Collection $models): Collection
+    {
+        return $models->load('volunteer_skills');
     }
     
 

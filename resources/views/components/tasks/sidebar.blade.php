@@ -4,5 +4,5 @@
     <li class="mb-4"><a href="/tasks/show/{{ $task_id }}/assignees">All Assignees</a></li>
     <li class="mb-4"><a href="/tasks/show/{{ $task_id }}/emergency_responders">Emergency Responders</a></li>
     <li class="mb-4"><a href="/tasks/show/{{ $task_id }}/volunteers">Volunteers</a></li>
-    <li class="mb-4"><a href="/tasks/show/{{ $task_id }}/request_help">Request Help</a></li>
+    <li class="mb-4"><a href="/tasks/show/{{ $task_id }}/assignable_users">Request Help</a></li>
 </ul>

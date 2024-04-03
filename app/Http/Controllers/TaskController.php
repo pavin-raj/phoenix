@@ -10,15 +10,14 @@ use App\Models\TaskContact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Stevebauman\Location\Facades\Location;
 
 class TaskController extends Controller
 {
 
-    // Show all tasks/requests
     public function index(){
+
         if(Auth::guest() || Auth::user()->hasRole('citizen')){
             $taskIds = getTaskCookie();
             $tasks = Task::whereIn('id', $taskIds)->get();
@@ -26,10 +25,16 @@ class TaskController extends Controller
         else if (Auth::user()->hasRole('admin')){
             $tasks = Task::all();
         }
-        else if ((Auth::user()->hasRole('emergency responder')) || (Auth::user()->hasRole('volunteer'))){
+        else if (Auth::user()->hasRole('emergency responder')){
 
            $tasks = Task::with('assignees')->whereHas('assignees', function ($query) {
                 $query->where('user_id', Auth::user()->id);
+            })->get();
+        }
+        else if(Auth::user()->hasRole('volunteer'))
+        {
+            $tasks = Task::with('assignees')->whereHas('assignees', function ($query) {
+                $query->where('user_id', Auth::user()->id)->where('is_accepted', false);
             })->get();
         }
         return view('tasks.index', ['tasks' => $tasks]);
@@ -82,7 +87,16 @@ class TaskController extends Controller
         $task = Task::find($id);
         $priority = ['High', 'Moderate', 'Low', 'Very Low'];
         $status = ['Open', 'On Hold', 'Closed'];
-        return view('tasks.show', ['task'=>$task, 'priority'=>$priority, 'status'=> $status]);
+
+        $request_status = Assignee::select('is_requested','is_accepted', 'is_rejected')
+        ->where('task_id', $id)
+        ->where('user_id', auth()->id())
+        ->first();
+
+        // Store task_id in session for later using while requesting/accepting/rejecting task.
+        Session::put('task_id', $id);
+       
+        return view('tasks.show', ['task'=>$task, 'priority'=>$priority, 'status'=> $status, 'request_status'=>$request_status]);
     }
 
 
@@ -155,45 +169,12 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
-    public function getAssignees($id){
-        $userId = Assignee::select('user_id')->where('task_id', $id)->get();
-        $assignees=[];
-
-        foreach ($userId as $uid){
-            $assignees = array_merge($assignees, [User::find($uid)->toArray()]);
-        }
-        return $assignees;
+    public function accepted_tasks(){
+        $accepted_tasks = Task::with('assignees')->whereHas('assignees', function ($query) {
+                $query->where('user_id', Auth::user()->id)->where('is_accepted', true);
+            })->get();
+        return view('tasks.accepted_tasks', ['accepted_tasks' => $accepted_tasks]);
     }
-
-
-    public function assignees($id){
-        $userId = Assignee::select('user_id')->where('task_id', $id)->get();
-        $assignees=[];
-
-        foreach ($userId as $uid){
-            $assignees = array_merge($assignees, [User::find($uid)->toArray()]);
-        }
-
-        if((Route::current()->uri) == "tasks/show/{id}/assignees" )
-        return view('tasks.assignees.index', ['task_id' => $id, 'assignees' => $assignees]);
-
-        else if((Route::current()->uri) == "tasks/show/{id}/emergency_responders" )
-        return view('tasks.assignees.emergency_responders', ['task_id' => $id, 'assignees' => $assignees]);
-
-        else if((Route::current()->uri) == "tasks/show/{id}/volunteers" )
-        return view('tasks.assignees.volunteers', ['task_id' => $id, 'assignees' => $assignees]);
-    }
-
-    // public function emergency_responders($id){
-    //     $assignees = $this->getAssignees($id);
-    //     return view('tasks.assignees.emergency_responders', ['task_id' => $id, 'assignees' => $assignees]);
-    // }
-
-    // public function volunteers($id){
-    //     $assignees = $this->getAssignees($id);
-    //     return view('tasks.assignees.volunteers', ['task_id' => $id, 'assignees' => $assignees]);
-    // }
-
 
 }
 
