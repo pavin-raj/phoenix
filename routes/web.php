@@ -25,8 +25,9 @@ Route::get('/', function () {
 
 // Display page to create user
 Route::get('/users', [UserController::class, 'create']);
+Route::get('/users/volunteer', [UserController::class, 'create']);
 // Create new user
-Route::post('/users/store', [UserController::class, 'store']);
+Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
 Route::get('/users/show/{id}', [UserController::class, 'show']);
 Route::post('/users/{id}/update', [UserController::class, 'update'])->name('users.update');
 

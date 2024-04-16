@@ -7,9 +7,12 @@ use App\Models\User;
 use App\Models\Message;
 use App\Models\Assignee;
 use App\Models\TaskContact;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use Stevebauman\Location\Facades\Location;
 
@@ -17,10 +20,9 @@ class TaskController extends Controller
 {
 
     public function index(){
-
         if(Auth::guest() || Auth::user()->hasRole('citizen')){
-            $taskIds = getTaskCookie();
-            $tasks = Task::whereIn('id', $taskIds)->get();
+            $taskTokens = getTaskCookie();
+            $tasks = Task::whereIn('task_token', $taskTokens)->latest()->get();
         }
         else if (Auth::user()->hasRole('admin')){
             $tasks = Task::all();
@@ -51,35 +53,51 @@ class TaskController extends Controller
     public function store(Request $request){
         // To get Users Ip
         // $userIP = $request->ip();
+
         // Generate Random IP Address and get its location
-        $userIP = generateRandomIPAddress();
-        $location = Location::get($userIP);
+        // $userIP = generateRandomIPAddress();
+        // $location = Location::get($userIP);
+        
+        $location = Http::withUrlParameters([
+            'endpoint' => 'https://api.geoapify.com/v1/geocode/reverse',
+            'lat' => $request->latitude,
+            'lon' => $request->longitude,
+            'apiKey' =>  Config::get('services.geoapify.key'),
+            ])->get('{+endpoint}?lat={lat}&lon={lon}&apiKey={apiKey}');
+
+
+        $location = $location['features'][0]['properties'];
+        
 
         // Inserting task data to Tasks table
-        $data=$request->validate([
-            'description'=>'required'
+        $request->validate([
+            'description'=>'required',
+            'contact' => 'required_without_all:phone,email',
+            'phone' => ['required_without_all:contact,email','nullable','digits: 10'],
+            'email' => ['required_without_all:contact,phone','nullable','email:rfc,dns'],
         ]);
-        $data['description'] = $data['description'] . "\n\nContact Info is\n" . $request->contact;
-        $data['user_id']=auth()->id();
-        $data['latitude'] = $location->latitude;
-        $data['longitude'] = $location->longitude;
-        $data['city'] = $location->cityName;
-        $data['state'] =  $location->regionName;
-        $task = Task::create($data);    
+        $task_data['description'] = $request->description . "\n\nContact Info is\n" . $request->contact;
+        $task_data['user_id']=auth()->id();
+        $task_data['latitude'] = $request->latitude;
+        $task_data['longitude'] = $request->longitude;
+        $task_data['city'] = $location['city'];
+        $task_data['state'] =  $location['state'];
+        $task_data['task_token'] = Str::random(32) ."-". Str::uuid() ."-". Str::random(32);
+        $task = Task::create($task_data);    
     
-        // Set the cookie with appropriate values
-        storeTaskCookie($task->id);
+
+        // Set the cookie with appropriate values if user not logged in
+        if(!Auth::check())
+        storeTaskCookie($task->task_token);
 
         
         // Inseritng task contact info to Task_Contact table
-        $data=$request->validate([
-            'phone' => 'nullable|digits: 10',
-            'email' => 'nullable|email:rfc,dns',
-        ]);
-        $data['task_id'] = $task->id;
-        $taskContact = TaskContact::create($data);
+        $contact_data['phone'] = $request->phone;
+        $contact_data['email'] = $request->email;
+        $contact_data['task_id'] = $task->id;
+        $taskContact = TaskContact::create($contact_data);
 
-        return redirect('/');
+        return redirect('/tasks/index');
     }
 
 
@@ -169,6 +187,7 @@ class TaskController extends Controller
         return redirect()->back();
     }
 
+    
     public function accepted_tasks(){
         $accepted_tasks = Task::with('assignees')->whereHas('assignees', function ($query) {
                 $query->where('user_id', Auth::user()->id)->where('is_accepted', true);

@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 class AlertController extends Controller
 {
     public function index(){
-        $alerts = Alert::orderBy('created_at')->get();
+        $alerts = Alert::orderBy('created_at', 'DESC')->get();
         return view('alerts.index', ['alerts'=>$alerts]);
     }
 
@@ -19,17 +19,32 @@ class AlertController extends Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $data = $request->validate([
             'alert_type' => 'required|string',
             'headline' => 'nullable|string',
             'description' => 'required|string',
+            'image'=>'nullable|mimes:jpg,jpeg,png,webp',
             'issuing_agency' => 'required|string',
             'location' => 'nullable|string',
             'severity_level' => 'required|string',
             'response_instruction' => 'nullable|string',
         ]);
 
-        $alert = Alert::create($validatedData);
+        
+        if(isset($request->image)){
+            $file = $request->file('image');
+            $extension = $file->getClientOriginalExtension();
+
+            $path = 'uploads/alerts/';
+            $filename = time(). '.' . $extension;
+            $file->move($path, $filename);
+
+            $data['image'] = $path.$filename;
+        }
+        
+
+
+        $alert = Alert::create($data);
 
         return redirect()->route('alerts.index')->with('success', 'Alert created successfully!');
     }

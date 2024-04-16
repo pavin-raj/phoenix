@@ -10,10 +10,19 @@ class VolunteerSkill extends Model
 {
     use HasFactory, Searchable;
 
+
     public $timestamps = FALSE;
     protected $fillable = ['user_id', 'skill'];
 
+    public function toSearchableArray()
+    {
+        return [
+        'user_id' => $this->user_id,
+        'skill' => $this->skill,
+    ];
+    }
+
     public function user(){
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 }

@@ -86,6 +86,19 @@ h1 span {
 }
 
 
+/* Utility Classes */
+.rounded-tl-15xl {
+    border-top-left-radius: 7.5rem;
+}
+
+.rounded-br-15xl {
+    border-bottom-right-radius: 7.5rem;
+}
+
+.h-200 {
+    height: 33rem;
+}
+
 /* Button Styles */
 .btn {
     font-size: 1.125rem;
@@ -131,12 +144,12 @@ button.btn {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat( auto-fit, minmax(9rem, 1fr) );
+    grid-template-columns: repeat( auto-fit, minmax(9rem, 2fr) );
     /* grid-template-columns: repeat(4, 1fr); */
     font-size: 1.125rem;
     font-weight: 600;
     cursor: pointer;
-    max-width: 50rem;
+    max-width: 80rem;
 }
 
 
@@ -145,6 +158,13 @@ button.btn {
     justify-content: center;
     align-items: center;
     color: white;
+}
+
+
+/* Dropdown */
+.dropdown-toggle:hover .dropdown-menu{
+    width: 15rem;
+    display: block;
 }
 
 
@@ -297,7 +317,6 @@ button.btn {
 
 
 .control {
-    /* display: flex; */
     justify-content:space-around;
     margin-bottom: 1.25rem;
     margin-top: 0.625rem;
@@ -396,6 +415,8 @@ table tr:last-child td:last-child {
     max-width: 110ch;
 }
 
+
+/* Multiselect Dropdown */
 .multiselect-dropdown{
   display: inline-block;
   padding: 2px 5px 0px 5px;

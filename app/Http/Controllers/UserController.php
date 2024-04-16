@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Assignee;
 use Illuminate\Http\Request;
 use App\Models\VolunteerSkill;
+use App\Events\UserAuthenticated;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -31,8 +32,8 @@ class UserController extends Controller
                 ->uncompromised()]
         ]);
 
-        // Checks if user type is provided by user, else made a citizen
-        $formFields['role_id'] = $request->filled('user_type') ? $request->user_type : 5;
+        $formFields['role_id'] = $request->user_type;
+        
         // Encrypt Password
         $formFields['password'] = bcrypt($formFields['password']);
 
@@ -41,7 +42,7 @@ class UserController extends Controller
 
         // Login User
         auth()->login($user);
-
+        UserAuthenticated::dispatch();
         return redirect('/')->with('message', 'User created successfully');
 
     }
@@ -60,7 +61,8 @@ class UserController extends Controller
 
         if(auth()->attempt($formFields)){
             $request->session()->regenerate();
-            
+            $user = auth()->user();
+            UserAuthenticated::dispatch();
             return redirect('/')->with('message', 'You are logged in');
         }
 
@@ -109,8 +111,8 @@ class UserController extends Controller
 
     public function update($id, Request $request){
         $user = User::find($id);
-        $request->validate([
-            'name' => 'required|regex:/^[a-zA-Z ]+$/',
+        $data = $request->validate([
+            'name' => 'required|regex:/^[a-zA-Z ]+$/',  
             'image'=>'nullable|mimes:jpg,jpeg,png,webp',
             'email' => $request->email === $user->email ? 'required|email' : 'required|email|unique:users',
         ]);
@@ -123,13 +125,7 @@ class UserController extends Controller
             $filename = time(). '.' . $extension;
             $file->move($path, $filename);
         }
-
-
-        User::find($id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'image' => $path.$filename
-        ]);
+        $data['image'] = $path.$filename;
 
 
         VolunteerSkill::where('user_id', $id)->delete();
@@ -140,25 +136,8 @@ class UserController extends Controller
             ]);
         }
 
+        User::find($id)->update($data);
+
         return redirect()->back();
-
-
-        // if($request->has('file')){
-        //     $file = $request->file('file');
-        //     $extension = $file->getClientOriginalExtension();
-
-        //     $path = 'uploads/messages/';
-        //     $filename = time(). '.' . $extension;
-        //     $file->move($path, $filename);
-        // }
-
-        // Message::create([
-        //     'body' => $request->body,
-        //     'file' => $path.$filename,
-        //     'task_id' => $id,
-        //     'user_id' => auth()->id()
-        // ]);
-
-        // return redirect()->back();
     }
 }

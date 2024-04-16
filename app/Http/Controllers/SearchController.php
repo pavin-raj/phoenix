@@ -6,10 +6,12 @@ use App\Models\User;
 use App\Models\Assignee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 
 class SearchController extends Controller
 {
+
     public function index($id, Request $request)
     {
         

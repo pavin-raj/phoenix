@@ -16,6 +16,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, Searchable;
 
+
     /**
      * The attributes that are mass assignable.
      *
@@ -77,14 +78,10 @@ class User extends Authenticatable
         return [
         'name' => $this->name,
         'role_id' => (int) $this->role_id,
+        'volunteer_skills' => $this->volunteer_skills()->with('user')->get(),
     ];
     }
 
-    public function makeSearchableUsing(Collection $models): Collection
-    {
-        return $models->load('volunteer_skills');
-    }
-    
 
     public function hasRole($role)
     {

@@ -2,7 +2,7 @@
 
 @unless (count($tasks) == 0)
     @foreach ($tasks as $task)
-        <div class="card">
+        <div class="card w-2/3">
             <h2>Please Verify</h2>
             <div class="card__highlight">
 
@@ -67,8 +67,8 @@
             </div>
 
             <div class="last-item">
-                <button class="btn bg-primary">Delete</button>
-                <button class="btn bg-green-light">Edit Details</button>
+                <a class="btn bg-primary">Delete</a>
+                <a href="/tasks/show/{{ $task->id }}" class="btn bg-green-light">View More</a>
             </div>
 
         </div>

@@ -7,13 +7,18 @@
     @unless (count($alerts) == 0)
         <section class="bg-white dark:bg-gray-900 flex">
             <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-                {{-- <div class="mx-auto max-w-screen-sm text-center lg:mb-16 mb-8">
-                    <h2 class="mb-4 text-3xl lg:text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Official
-                        Advisories
-                    </h2>
-                    <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">Navigating uncertainty? Access official
-                        advisories for real-time updates, important alerts, and critical preparedness information.</p>
-                </div> --}}
+
+                @can('isAdmin')
+                    <div class="flex justify-end mb-10">
+                        <a href="/alerts/create"
+                            class="relative rounded px-5 py-2.5 overflow-hidden group bg-red-500 relative hover:bg-gradient-to-r hover:from-red-500 hover:to-red-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-red-400 transition-all ease-out duration-300">
+                            <span
+                                class="absolute right-0 w-8 h-32 -mt-12 transition-all duration-1000 transform translate-x-12 bg-white opacity-10 rotate-12 group-hover:-translate-x-40 ease"></span>
+                            <span class="relative">Declare Emergency</span>
+                        </a>
+                    </div>
+                @endcan
+
                 <div class="grid gap-8 lg:grid-cols-1">
 
                     @foreach ($alerts as $alert)

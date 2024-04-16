@@ -27,13 +27,14 @@ function generateRandomIPAddress() {
 }
 
 
+
 // Cookie Functions
 
 
 // Get Cookies
 function getTaskCookie(){
   // Get cookie and convert it into array
-  $json = Cookie::get('task_id');
+  $json = Cookie::get('task_token');
   $array = json_decode($json);
   
   // $array must be of type countable|array, not null
@@ -42,13 +43,13 @@ function getTaskCookie(){
 }
 
 // Store a new cookie
-function storeTaskCookie($taskId){
+function storeTaskCookie($task_token){
   $array = getTaskCookie();
   // If values are in array, append else create 
-  $array = isset($array) ? array_merge($array, [$taskId]) : [$taskId];
+  $array = isset($array) ? array_merge($array, [$task_token]) : [$task_token];
   echo count($array) . "<br>";
   echo implode(' ',$array);
   $json = json_encode($array);
-  Cookie::queue(cookie::make('task_id', $json, 10080));
+  Cookie::queue(cookie::make('task_token', $json, 10080));
 }
 

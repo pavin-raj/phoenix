@@ -2,7 +2,12 @@
 
 
 @section('content')
-    <x-banner h1="User Registration" span="" />
+    @if (Route::current()->uri == 'users/volunteer')
+        <x-banner h1="Volunteer Registration" span="" />
+    @else
+        <x-banner h1="User Registration" span="" />
+    @endif
+
 
     <div>
         @if ($errors->any())
@@ -15,12 +20,13 @@
     </div>
 
     <div class="content-wrapper">
-        <form method="post" class="card card-lg" method="post" action="/users/store">
+        <form method="post" class="card card-lg" method="post" action="{{ route('users.store') }}">
             @csrf
             @method('post')
 
             @auth
-                @cannot('isCitizen')
+
+                @cannot('isVolunteerOrCitizen')
                     <span>
                         <label id="">User Type*</label>
                         @error('user_type')
@@ -29,7 +35,7 @@
                     </span>
                 @endcannot
 
-                <div class="control">
+                <div class="control flex">
 
                     @can('createCoordinator', Auth::user())
                         <div class="control-group">
@@ -52,12 +58,18 @@
                             Volunteer
                         </div>
                         <div class="control-group">
-                            <input id="user_type" type="radio" name="user_type" value="5">
+                            <input id="user_type" type="radio" name="user_type" value="5" checked>
                             Citizen
                         </div>
                     @endcan
 
                 </div>
+            @else
+                @if (Route::current()->uri == 'users/volunteer')
+                    <input type="hidden" name="user_type" value=4>
+                @else
+                    <input type="hidden" name="user_type" value=5>
+                @endif
 
             @endauth
 
@@ -96,7 +108,7 @@
 
 
             <div class="control-group">
-                <input type="checkbox" required="true">  I affirm that the information provided above is accurate
+                <input type="checkbox" required="true"> I affirm that the information provided above is accurate
             </div>
 
             <div class="btn-container">

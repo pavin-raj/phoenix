@@ -5,7 +5,7 @@
     <x-banner h1="Emergency" span="Alerts"></x-banner>
 
     <div class="content-wrapper">
-        <form method="post" class="card card-lg" action="{{ route('alerts.store') }}">
+        <form method="post" class="card card-lg" action="{{ route('alerts.store') }}" enctype="multipart/form-data">
             @csrf
 
             <span>
@@ -38,6 +38,14 @@
             </span>
 
             <span>
+                <label for="image">Image:</label>
+                @error('image')
+                    <p>{{ $message }}</p>
+                @enderror
+                <input type="file" id="image" name="image" class="control"></input type="file">
+            </span>
+
+            <span>
                 <label for="issuing_agency">Issuing Agency:</label>
                 @error('issuing_agency')
                     <p>{{ $message }}</p>
@@ -46,11 +54,11 @@
             </span>
 
             <span>
-                <label for="location">Location (optional):</label>
+                <label for="location">Location:</label>
                 @error('location')
                     <p>{{ $message }}</p>
                 @enderror
-                <input id="location" type="text" class="control" name="location">
+                <input id="location" type="text" class="control" name="location" required>
             </span>
 
             <span>
