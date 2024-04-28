@@ -155,6 +155,13 @@ class TaskController extends Controller
     }
 
 
+    public function destroy($id) {
+        $task = Task::find($id);
+        $task->delete();
+        return redirect('tasks/index');
+    }
+
+
 
     public function messages($id){
         $messages = Task::find($id)->messages()->latest()->get();

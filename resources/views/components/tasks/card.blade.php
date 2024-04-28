@@ -67,7 +67,7 @@
             </div>
 
             <div class="last-item">
-                <a class="btn bg-primary">Delete</a>
+                <a href="/tasks/destroy/{{ $task->id }}" class="btn bg-primary">Delete</a>
                 <a href="/tasks/show/{{ $task->id }}" class="btn bg-green-light">View More</a>
             </div>
 

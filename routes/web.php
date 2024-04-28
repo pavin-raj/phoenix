@@ -54,6 +54,7 @@ Route::group(['prefix'=>'tasks/'], function(){
     Route::get('index', [TaskController::class, 'index']);
     Route::get('accepted', [TaskController::class, 'accepted_tasks']);
     Route::post('update/{id}',[TaskController::class, 'update']);
+    Route::get('destroy/{id}',[TaskController::class, 'destroy']);
 
     Route::group(['prefix'=>'show/{id}/'], function(){
 
