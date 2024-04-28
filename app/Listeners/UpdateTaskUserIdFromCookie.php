@@ -26,14 +26,16 @@ class UpdateTaskUserIdFromCookie
         
         $taskTokens = getTaskCookie();
 
-        
-
-        foreach ($taskTokens as $token) {
+        try{
+            foreach ($taskTokens as $token) {
             $task = Task::where('task_token', $token)->first();
             $task->user_id = auth()->id();
             $task->update();
         }
+    } catch(\Error $e){}
+    
+    Cookie::forget('task_token');
 
-        Cookie::forget('task_token');
+
     }
 }
