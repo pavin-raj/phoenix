@@ -52,6 +52,8 @@ Route::group(['prefix'=>'tasks/'], function(){
     Route::get('', [TaskController::class, 'create']);
     Route::post('store', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('index', [TaskController::class, 'index']);
+    Route::get('unassigned', [TaskController::class, 'unassigned_tasks']);
+    Route::get('assigned', [TaskController::class, 'assigned_tasks']);
     Route::get('accepted', [TaskController::class, 'accepted_tasks']);
     Route::post('update/{id}',[TaskController::class, 'update']);
     Route::get('destroy/{id}',[TaskController::class, 'destroy']);

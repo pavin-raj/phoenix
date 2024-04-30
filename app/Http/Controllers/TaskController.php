@@ -9,6 +9,7 @@ use App\Models\Assignee;
 use App\Models\TaskContact;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -195,6 +196,23 @@ class TaskController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+
+    public function assigned_tasks() {
+        $assignedTaskIds = DB::table('assignees')->select('task_id');
+        $assigned_tasks = DB::table('tasks')
+  ->whereIn('id', $assignedTaskIds)
+  ->get();
+         return view('tasks.assigned_tasks', ['assigned_tasks' => $assigned_tasks]);
+    }
+
+    public function unassigned_tasks() {
+        $assignedTaskIds = DB::table('assignees')->select('task_id');
+        $unassigned_tasks = DB::table('tasks')
+  ->whereNotIn('id', $assignedTaskIds)
+  ->get();
+         return view('tasks.unassigned_tasks', ['unassigned_tasks' => $unassigned_tasks]);
     }
 
     

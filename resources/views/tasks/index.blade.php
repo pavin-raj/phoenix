@@ -3,7 +3,7 @@
 @php
     if (Auth::user() != null) {
         if (Auth::user()->hasRole('admin')) {
-            $nav = ['/tasks/index' => 'All Tasks', ' ' => 'Unassigned Tasks', '' => 'Assigned Tasks'];
+            $nav = ['/tasks/index' => 'All Tasks', '/tasks/unassigned' => 'Unassigned Tasks', '/tasks/assigned' => 'Assigned Tasks'];
         } elseif (Auth::user()->hasRole('emergency responder')) {
             $nav = [];
         } elseif (Auth::user()->hasRole('volunteer')) {
