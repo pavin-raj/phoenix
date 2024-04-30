@@ -67,9 +67,6 @@ class UserPolicy
         //
     }
 
-    public function createCoordinator(User $user){
-        return $user->hasRole('admin');
-    }
 
     public function createEmergencyResponder(User $user){
         return ($user->hasRole('admin') || $user->hasRole('coordinator'));

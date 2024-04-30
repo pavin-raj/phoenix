@@ -15,7 +15,7 @@
     <h3 class="mb-2 text-emerald-800 font-extrabold tracking-tight leading-none ">
         {{ $a['name'] }}
     </h3>
-    <p class="text-green-700 text-sm mb-2">Line 1 of the description.</p>
+    <p class="text-green-700 text-sm mb-2">{{ $a['email'] }}</p>
     <a href="/users/show/{{ $a['id'] }}"
         class="relative rounded px-5 py-2.5 overflow-hidden group bg-green-500 relative hover:bg-gradient-to-r hover:from-green-500 hover:to-green-400 text-white hover:ring-2 hover:ring-offset-2 hover:ring-green-400 transition-all ease-out duration-300">
         <span

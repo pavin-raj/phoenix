@@ -37,12 +37,6 @@
 
                 <div class="control flex">
 
-                    @can('createCoordinator', Auth::user())
-                        <div class="control-group">
-                            <input id="user_type" type="radio" name="user_type" value="2">
-                            Coordinator
-                        </div>
-                    @endcan
 
                     @can('createEmergencyResponder', Auth::user())
                         <div class="control-group">

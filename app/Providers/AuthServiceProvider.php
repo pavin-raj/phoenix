@@ -26,10 +26,6 @@ class AuthServiceProvider extends ServiceProvider
             return $user->role_id == 1;
         });
 
-        Gate::define('isCoordinator', function($user){
-            return $user->role_id == 2;
-        });
-
         Gate::define('isEmergencyResponder', function($user){
             return $user->role_id == 3;
         });

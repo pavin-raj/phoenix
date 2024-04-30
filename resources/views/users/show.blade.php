@@ -15,7 +15,7 @@
 
                                     @if (isset($user->image))
                                         <img alt="..." src="{{ asset($user->image) }}"
-                                            class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-28 -ml-20 lg:-ml-16"
+                                            class="shadow-xl rounded-full obejct-cover w-44 h-44 align-middle border-none absolute -m-28 -ml-20 lg:-ml-16"
                                             style="max-width: 150px;" />
                                     @else
                                         <img alt="..." src="{{ asset('storage/profile.jfif') }}"

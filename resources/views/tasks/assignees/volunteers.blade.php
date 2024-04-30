@@ -20,7 +20,7 @@
         <x-tasks.sidebar :task_id=$task_id></x-tasks.sidebar>
 
         @unless (count($assignees) == 0)
-            <div class="container mx-auto">
+            <div class="container mx-auto mb-10">
                 <div class="flex flex-wrap gap-16 justify-center">
                     @foreach ($assignees as $assignee)
                         @foreach ($assignee as $a)

@@ -20,9 +20,12 @@ class TaskController extends Controller
 {
 
     public function index(){
-        if(Auth::guest() || Auth::user()->hasRole('citizen')){
+        if(Auth::guest()){
             $taskTokens = getTaskCookie();
             $tasks = Task::whereIn('task_token', $taskTokens)->latest()->get();
+        }
+        else if (Auth::user()->hasRole('citizen')) {
+            $tasks = Task::where('user_id', Auth::user()->id)->latest()->get();
         }
         else if (Auth::user()->hasRole('admin')){
             $tasks = Task::all();
